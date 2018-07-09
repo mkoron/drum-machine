@@ -1,85 +1,154 @@
 import React, { Component } from 'react';
 import 'bulma/css/bulma.min.css';
-import { Container, Columns, Column, Box, Title } from 'bloomer';
-
-
+import { Box, Container, Columns, Column, Notification, Title } from 'bloomer';
 
 const audios = [
   {
     id: 'Q',
-    src: 'sounds/clap-808.mp3',
+    keyCode: 81,
+    src: 'static/sounds/clap-808.mp3',
     text: 'clap-808'
   },
   {
     id: 'W',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-707'
+    keyCode: 87,
+    src: 'static/sounds/cowbell-808.mp3',
+    text: 'cowbell-808'
   },
   {
     id: 'E',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-101'
+    keyCode: 69,
+    src: 'static/sounds/clap-slapper.mp3',
+    text: 'clap-slapper'
   },
   {
-    id: 'Q',
-    src: 'sounds/clap-808.mp3',
-    text: 'clap-808'
+    id: 'A',
+    keyCode: 65,
+    src: 'static/sounds/kick-acoustic01.mp3',
+    text: 'kick-accoustic'
   },
   {
-    id: 'W',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-707'
+    id: 'S',
+    keyCode: 83,
+    src: 'static/sounds/kick-electro02.mp3',
+    text: 'kick-electro'
   },
   {
-    id: 'E',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-101'
+    id: 'D',
+    keyCode: 68,
+    src: 'static/sounds/kick-newwave.mp3',
+    text: 'kick-newwave'
   },
   {
-    id: 'Q',
-    src: 'sounds/clap-808.mp3',
-    text: 'clap-808'
+    id: 'Z',
+    keyCode: 90,
+    src: 'static/sounds/openhat-tight.mp3',
+    text: 'openhat-tight'
   },
   {
-    id: 'W',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-707'
+    id: 'X',
+    keyCode: 88,
+    src: 'static/sounds/shaker-shuffle.mp3',
+    text: 'shaker-shuffle'
   },
   {
-    id: 'E',
-    src: 'sounds/clap-707.mp3',
-    text: 'clap-101'
+    id: 'C',
+    keyCode: 67,
+    src: 'static/sounds/tom-fm.mp3',
+    text: 'tom-fm'
   }
 ] 
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      display: 'playing'
+    }
+
+    this.updateDisplay = this.updateDisplay.bind(this);
+  }
+
+  updateDisplay(text) {
+    this.setState({
+      display: text
+    })
+  }
   render() {
     return (
       <Container className="App" id="drum-machine">
         <Title hasTextAlign='centered'>Drum Machine</Title>
-        <Display />
+        <Columns>
+          <Column isSize='2/3'>
+            <Pads updateDisplay={this.updateDisplay} />
+          </Column>
+          <Column isSize='1/3'>
+            <Controls display={this.state.display}/>
+          </Column>
+        </Columns>
       </Container>
     );
   }
 }
 
-const Display = () => (
-  <div id="display">
-    <Pads />
-  </div>
-);
+class DrumPad extends Component {
+    constructor(props) {
+      super(props);
+      this.audio = React.createRef();
 
-const DrumPad = (props) => (
-    <Column isSize="1/3">
-      <Box className="drum-pad" hasTextAlign='centered'>{props.sound.text}</Box>
-    </Column>
-);
+      this.player = '';
+      this.handleKeypress = this.handleKeypress.bind(this);
+      this.handleClick = this.handleClick.bind(this);
+    }
 
+    componentDidMount() {
+      window.addEventListener("keyup", this.handleKeypress);
+    }
 
-const Pads = () => (
+    componentWillUnmount() {
+      window.removeEventListener("keyup", this.handleKeypress);
+    }
+
+    playSound() {
+      const audio = this.audio.current;
+      audio.currentTime = 0;
+      audio.play();
+      this.props.updateDisplay(this.props.sound.text);
+    }
+
+    handleKeypress(e) {
+      if (e.keyCode === this.props.sound.keyCode) {
+        this.playSound();
+      }
+    }
+
+    handleClick() {
+      this.playSound();
+    }
+
+    render() {
+      return (
+        <Column isSize="1/3">
+          <Box className="drum-pad" hasTextAlign='centered' onClick={this.handleClick}>
+            {this.props.sound.id}
+            <audio className="clip" id={this.props.sound.id}  ref={this.audio}>
+              <source src={this.props.sound.src} type="audio/mpeg" />
+            </audio>
+          </Box>
+        </Column>
+      );
+  }
+}
+
+const Pads = (props) => (
   <Columns isMultiline>
-    {audios.map( (item) => <DrumPad sound={item} />)}
+    {audios.map( (item) => <DrumPad key={item.id} sound={item} updateDisplay={props.updateDisplay} />)}
   </Columns>
+);
+
+const Controls = (props) => (
+  <Notification id="display" isColor="info" hasTextAlign="centered">{props.display}</Notification>
 );
 
 export default App;
