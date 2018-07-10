@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import 'bulma/css/bulma.min.css';
-import { Box, Container, Columns, Column, Notification, Title } from 'bloomer';
+import { Box, Button, Container, Columns, Column, Notification, Title } from 'bloomer';
 
 const audios = [
   {
@@ -130,12 +129,12 @@ class DrumPad extends Component {
     render() {
       return (
         <Column isSize="1/3">
-          <Box className="drum-pad" hasTextAlign='centered' onClick={this.handleClick}>
-            {this.props.sound.id}
+          <Button className="drum-pad" hasTextAlign='centered' onClick={this.handleClick}>
+            <p>{this.props.sound.id}</p>
             <audio className="clip" id={this.props.sound.id}  ref={this.audio}>
               <source src={this.props.sound.src} type="audio/mpeg" />
             </audio>
-          </Box>
+          </Button>
         </Column>
       );
   }
