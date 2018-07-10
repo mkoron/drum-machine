@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Box, Button, Container, Columns, Column, Notification, Title } from 'bloomer';
+import './App.css';
 
 const audios = [
   {
