@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Box, Button, Container, Columns, Column, Notification, Title } from 'bloomer';
 import './App.css';
 
+const backgroundColors = ['violet', 'green', 'orange'];
+const padColumns = 3;
 const audios = [
   {
     id: 'Q',
@@ -64,10 +66,12 @@ class App extends Component {
     super(props)
 
     this.state = {
-      display: 'playing'
+      display: '...',
+      volume: 10
     }
 
     this.updateDisplay = this.updateDisplay.bind(this);
+    this.updateVolume = this.updateVolume.bind(this);
   }
 
   updateDisplay(text) {
@@ -75,16 +79,23 @@ class App extends Component {
       display: text
     })
   }
+
+  updateVolume(volume) {
+    this.setState({
+        volume
+    });
+  }
   render() {
     return (
       <Container className="App" id="drum-machine">
-        <Title hasTextAlign='centered'>Drum Machine</Title>
+        <Title isSize="1" hasTextAlign='centered'>Drum Machine</Title>
         <Columns>
-          <Column isSize='2/3'>
-            <Pads updateDisplay={this.updateDisplay} />
+          <Column isSize={7}>
+            <Pads updateDisplay={this.updateDisplay} volume={this.state.volume} />
           </Column>
-          <Column isSize='1/3'>
-            <Controls display={this.state.display}/>
+          <Column />
+          <Column isSize={4}>
+            <Controls volume={this.state.volume} updateVolume={this.updateVolume} display={this.state.display} />
           </Column>
         </Columns>
       </Container>
@@ -112,8 +123,15 @@ class DrumPad extends Component {
 
     playSound() {
       const audio = this.audio.current;
+      const button = audio.parentElement;
+
+      audio.volume = this.props.volume / 100;
       audio.currentTime = 0;
       audio.play();
+
+      button.focus();
+      button.style.opacity = 1;
+
       this.props.updateDisplay(this.props.sound.text);
     }
 
@@ -130,10 +148,10 @@ class DrumPad extends Component {
     render() {
       return (
         <Column isSize="1/3">
-          <Button className="drum-pad" hasTextAlign='centered' onClick={this.handleClick}>
+          <Button className={`drum-pad ${ this.props.backgroundColor }-radial-background` } hasTextAlign='centered' onClick={this.handleClick}>
             <p>{this.props.sound.id}</p>
-            <audio className="clip" id={this.props.sound.id}  ref={this.audio}>
-              <source src={this.props.sound.src} type="audio/mpeg" />
+            <audio className="clip" id={this.props.sound.id}  ref={this.audio} 
+              src={this.props.sound.src} type="audio/mpeg" onEnded={ (e) => e.target.parentElement.style.opacity = .6 }>
             </audio>
           </Button>
         </Column>
@@ -143,12 +161,31 @@ class DrumPad extends Component {
 
 const Pads = (props) => (
   <Columns isMultiline>
-    {audios.map( (item) => <DrumPad key={item.id} sound={item} updateDisplay={props.updateDisplay} />)}
+    {audios.map( (item, index) => <DrumPad key={item.id} sound={item} volume={props.volume} updateDisplay={props.updateDisplay}
+      backgroundColor={backgroundColors[Math.floor(index / padColumns)]}/>)}
   </Columns>
 );
 
-const Controls = (props) => (
-  <Notification id="display" isColor="info" hasTextAlign="centered">{props.display}</Notification>
-);
+class Controls extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleSlider = this.handleSlider.bind(this);
+  }
+
+  handleSlider(e) {
+    this.props.updateVolume(e.target.value);
+  }
+
+  render() {
+    return (
+        <div>
+            <Notification id="display" isColor="info" hasTextAlign="centered">{this.props.display}</Notification>
+            <input class="slider" step="1" min="0" max="100" type="range" onChange={this.handleSlider} />
+            <Notification id="display-volume" isColor="primary">{this.props.volume}</Notification>
+        </div>
+    );
+  }
+}
 
 export default App;

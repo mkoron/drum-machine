@@ -23,3 +23,6 @@ yarn-error.log*
 
 # remove css files
 src/**/*.css
+
+# pycharm
+/.idea
