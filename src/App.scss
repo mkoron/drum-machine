@@ -4,14 +4,26 @@
     padding: 1.25em;
 }
 
+#display {
+  padding: .6em;
+  font-size: .8em;
+  height: 4.2em;
+}
+
 #display-volume {
-  width: 40%;
+  width: 30%;
   font-size: .9em;
   margin: 0 auto;
+  padding: 1.1em;
 }
 
 .notification {
   font-family: 'Press Start 2P', cursive;
+}
+
+.box {
+  padding: .7em;
+  margin-top: 1.5rem;
 }
 
 .button {
@@ -26,6 +38,15 @@
     }
   }
 
+.tag {
+  margin-left: .5em;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+//Buttons background colors
 .violet-radial-background {
   background: radial-gradient(ellipse at center, #f9b6f8 29%, #e783ea 63%); }
 
@@ -34,6 +55,8 @@
 
 .orange-radial-background {
   background: radial-gradient(ellipse at center, #ffe1bc 18%, #ffb459 97%); }
+//end background colors
+
 
 .title {
   font-family: Sarina, cursive;
