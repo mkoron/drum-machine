@@ -239,7 +239,8 @@ class DrumPad extends Component {
     render() {
       return (
         <div className="column is-one-third">
-          <button className={`drum-pad ${ this.props.backgroundColor }-radial-background button is-centered` } onClick={this.handleClick}>
+          <button className={`drum-pad ${ this.props.backgroundColor }-radial-background button is-centered` } id={ this.props.sound.text }
+                  onClick={this.handleClick}>
             <p>{this.props.sound.id}</p>
             <audio className="clip" id={this.props.sound.id}  ref={this.audio} 
               src={this.props.sound.src} type="audio/mpeg" onEnded={ (e) => e.target.parentElement.style.opacity = .6 }>
