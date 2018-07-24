@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Box, Button, Container, Columns, Column, Notification, Tag, Title } from 'bloomer';
 import './App.css';
 
 const backgroundColors = ['violet', 'green', 'orange'];
@@ -175,18 +174,18 @@ class App extends Component {
   }
   render() {
     return (
-      <Container className="App" id="drum-machine">
-        <Title isSize="1" hasTextAlign='centered'>Drum Machine</Title>
-        <Columns>
-          <Column isSize={7}>
+      <div className="container App" id="drum-machine">
+        <h1 className="title is-1 has-text-centered">Drum Machine</h1>
+        <div className="columns">
+          <div className="column is-7">
             <Pads updateDisplay={this.updateDisplay} volume={this.state.volume} bank={ this.state.bank } />
-          </Column>
-          <Column>
+          </div>
+          <div className="column">
             <Controls volume={ zeroPadding(this.state.volume) } updateBank={ this.updateBank }
                     updateVolume={ this.updateVolume } display={this.state.display} />
-          </Column>
-        </Columns>
-      </Container>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -239,23 +238,23 @@ class DrumPad extends Component {
 
     render() {
       return (
-        <Column isSize="1/3">
-          <Button className={`drum-pad ${ this.props.backgroundColor }-radial-background` } hasTextAlign='centered' onClick={this.handleClick}>
+        <div className="column is-one-third">
+          <button className={`drum-pad ${ this.props.backgroundColor }-radial-background button is-centered` } onClick={this.handleClick}>
             <p>{this.props.sound.id}</p>
             <audio className="clip" id={this.props.sound.id}  ref={this.audio} 
               src={this.props.sound.src} type="audio/mpeg" onEnded={ (e) => e.target.parentElement.style.opacity = .6 }>
             </audio>
-          </Button>
-        </Column>
+          </button>
+        </div>
       );
   }
 }
 
 const Pads = (props) => (
-  <Columns isMultiline>
+  <div className="columns is-multiline">
     {audios[props.bank].sounds.map( (item, index) => <DrumPad key={item.id} sound={item} volume={props.volume} updateDisplay={props.updateDisplay}
       backgroundColor={backgroundColors[Math.trunc(index / padColumns)]}/>)}
-  </Columns>
+  </div>
 );
 
 class Controls extends Component {
@@ -272,9 +271,9 @@ class Controls extends Component {
   render() {
     return (
         <div>
-            <Notification id="display" isColor="info" hasTextAlign="centered">{this.props.display}</Notification>
-            <input class="slider" step="1" min="0" max="100" type="range" onChange={this.handleSlider} />
-            <Notification id="display-volume" isColor="primary">{this.props.volume}</Notification>
+            <div className="notification has-text-info has-text-centered" id="display">{this.props.display}</div>
+            <input className="slider" step="1" min="0" max="100" type="range" onChange={this.handleSlider} />
+            <div className="notification is-primary" id="display-volume">{this.props.volume}</div>
             <Banks updateBank = { this.props.updateBank } />
         </div>
     );
@@ -307,16 +306,16 @@ class Banks extends Component {
 
   render() {
     return (
-        <Box>
+        <div className="box">
             { audios.map((bank, index) => (
-                <Tag key={bank.name}  isColor={ index == this.state.current ? 'warning' : 'black' } isSize="medium"
+                <span className={`tag is-medium is-${ index == this.state.current ? 'warning' : 'black' }`} key={bank.name}
                     onClick={ this.changeBank } data-index={ index } data-name={ bank.name }>
                     { index + 1 }
-                </Tag>
+                </span>
                 )
             )
             }
-        </Box>
+        </div>
     );
   }
 }
