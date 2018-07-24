@@ -271,7 +271,7 @@ class Controls extends Component {
   render() {
     return (
         <div>
-            <div className="notification has-text-info has-text-centered" id="display">{this.props.display}</div>
+            <div className="notification is-info has-text-centered" id="display">{this.props.display}</div>
             <input className="slider" step="1" min="0" max="100" type="range" onChange={this.handleSlider} />
             <div className="notification is-primary" id="display-volume">{this.props.volume}</div>
             <Banks updateBank = { this.props.updateBank } />
