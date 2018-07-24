@@ -127,7 +127,7 @@ const audios = [
     }
 ];
 
-
+// add passing to display
 function zeroPadding(val) {
   const toPad = parseInt(val);
 
@@ -194,21 +194,26 @@ class App extends Component {
 class DrumPad extends Component {
     constructor(props) {
       super(props);
+      // create a ref and attach it to the element
       this.audio = React.createRef();
 
       this.handleKeypress = this.handleKeypress.bind(this);
       this.handleClick = this.handleClick.bind(this);
     }
 
+    // add listener on mount
     componentDidMount() {
       window.addEventListener("keyup", this.handleKeypress);
     }
 
+    // remove listener on unmount
     componentWillUnmount() {
       window.removeEventListener("keyup", this.handleKeypress);
     }
 
     playSound() {
+      // When a ref is passed to an element in render, a reference to the node becomes accessible at
+      // the current attribute of the ref.
       const audio = this.audio.current;
       const button = audio.parentElement;
 
